@@ -1,0 +1,253 @@
+/* ---------- General ---------- */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Poppins',sans-serif;
+    background:#FAF7F2;
+    color:#4F564A;
+    line-height:1.7;
+}
+
+
+/* ---------- Navigation ---------- */
+
+header{
+    background:#A3B18A;
+    box-shadow:0 4px 15px rgba(0,0,0,.08);
+}
+
+nav{
+    max-width:1200px;
+    margin:auto;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:22px 30px;
+}
+
+.logo{
+    font-size:30px;
+    font-weight:700;
+    color:white;
+}
+
+.links{
+    display:flex;
+    gap:30px;
+}
+
+.links a{
+    text-decoration:none;
+    color:white;
+    font-weight:500;
+    transition:.3s;
+}
+
+.links a:hover{
+    color:#F6E7EA;
+}
+
+
+/* ---------- Main ---------- */
+
+main{
+    max-width:1200px;
+    margin:auto;
+    padding:50px 30px;
+}
+
+
+/* ---------- Hero ---------- */
+
+.hero{
+    background:linear-gradient(135deg,#F5D7DD,#EADFCB);
+    border-radius:30px;
+    padding:80px 60px;
+    text-align:center;
+    box-shadow:0 15px 40px rgba(0,0,0,.08);
+}
+
+.hero h1{
+    font-size:48px;
+    margin-bottom:25px;
+    color:#58634C;
+}
+
+.hero p{
+    font-size:20px;
+    color:#6C7465;
+    max-width:700px;
+    margin:auto;
+}
+
+
+/* ---------- Buttons ---------- */
+
+.button,
+button{
+    display:inline-block;
+    margin-top:35px;
+    padding:15px 35px;
+    background:#C98C97;
+    color:white;
+    border:none;
+    border-radius:40px;
+    cursor:pointer;
+    text-decoration:none;
+    font-size:17px;
+    transition:.3s;
+}
+
+.button:hover,
+button:hover{
+    background:#B57582;
+    transform:translateY(-3px);
+}
+
+
+/* ---------- Cards ---------- */
+
+.cards,
+.products{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:30px;
+    margin-top:60px;
+}
+
+.card{
+    background:white;
+    padding:35px;
+    border-radius:25px;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+    transition:.3s;
+}
+
+.card:hover{
+    transform:translateY(-8px);
+}
+
+.card h3{
+    color:#7B8A6A;
+    margin-bottom:15px;
+}
+
+.card p{
+    color:#777;
+}
+
+
+/* ---------- Pages ---------- */
+
+.page{
+    background:white;
+    border-radius:25px;
+    padding:50px;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+
+.page h1{
+    margin-bottom:25px;
+    color:#7B8A6A;
+}
+
+.page p{
+    margin-bottom:15px;
+}
+
+
+/* ---------- Forms ---------- */
+
+.form-box{
+    max-width:520px;
+    margin:60px auto;
+    background:white;
+    padding:45px;
+    border-radius:25px;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+
+.form-box h1{
+    text-align:center;
+    margin-bottom:35px;
+    color:#7B8A6A;
+}
+
+input,
+textarea{
+    width:100%;
+    margin-bottom:18px;
+    padding:15px;
+    border:1px solid #D9D9D9;
+    border-radius:12px;
+    font-family:'Poppins',sans-serif;
+    font-size:15px;
+    transition:.3s;
+}
+
+input:focus,
+textarea:focus{
+    outline:none;
+    border-color:#C98C97;
+    box-shadow:0 0 10px rgba(201,140,151,.25);
+}
+
+textarea{
+    resize:vertical;
+    min-height:130px;
+}
+
+
+/* ---------- Product Detail ---------- */
+
+.price{
+    font-size:26px;
+    font-weight:600;
+    color:#C98C97;
+    margin:25px 0;
+}
+
+
+/* ---------- Footer ---------- */
+
+footer{
+    margin-top:80px;
+    background:#A3B18A;
+    color:white;
+    text-align:center;
+    padding:30px;
+}
+
+
+/* ---------- Responsive ---------- */
+
+@media(max-width:768px){
+
+nav{
+    flex-direction:column;
+    gap:20px;
+}
+
+.links{
+    flex-wrap:wrap;
+    justify-content:center;
+}
+
+.hero{
+    padding:50px 30px;
+}
+
+.hero h1{
+    font-size:34px;
+}
+
+.page{
+    padding:30px;
+}
+
+}

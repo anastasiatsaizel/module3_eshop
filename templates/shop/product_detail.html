@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+{{ product.name }}
+{% endblock %}
+
+
+{% block content %}
+
+<div class="page">
+
+
+<h1>
+    {{ product.name }}
+</h1>
+
+
+<p>
+    {{ product.description }}
+</p>
+
+
+<p>
+    Price:
+    <strong>
+        {{ product.price }} Kč
+    </strong>
+</p>
+
+
+<button class="button">
+    Add to cart
+</button>
+
+
+</div>
+
+{% endblock %}

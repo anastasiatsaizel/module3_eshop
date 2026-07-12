@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}
+Home | BuildMarket
+{% endblock %}
+
+
+{% block content %}
+
+<section class="hero">
+
+    <h1>
+        Quality building materials for your dream home 🌸
+        Welcome, {{ username }}!
+    </h1>
+
+    <p>
+        Reliable materials for renovation,
+        construction, and creating a comfortable space.
+    </p>
+
+    <a class="button" href="/products/">
+        Browse products
+    </a>
+
+</section>
+
+
+<section class="cards">
+
+    <div class="card">
+        <h3>🧱 Reliability</h3>
+        <p>Only trusted and high-quality materials.</p>
+    </div>
+
+    <div class="card">
+        <h3>🌿 Quality</h3>
+        <p>We help you choose the best solutions.</p>
+    </div>
+
+    <div class="card">
+        <h3>🏡 For your home</h3>
+        <p>Everything you need for construction and renovation.</p>
+    </div>
+
+</section>
+
+{% endblock %}
