@@ -1,10 +1,8 @@
 {% extends "base.html" %}
 
-
 {% block title %}
 Products
 {% endblock %}
-
 
 {% block content %}
 
@@ -12,69 +10,61 @@ Products
     Building materials catalog 🧱
 </h1>
 
-    <p>
-Total products: {{ products|length }}
+<p>
+    Total products: {{ products|length }}
 </p>
 
 <div class="products">
-
 
 {% for product in products %}
 
 <div class="card">
 
-<h3>
-   {{ forloop.counter }}. {{ product.name|upper }}
-</h3>
+    <h3>
+       {{ forloop.counter }}. {{ product.title|upper }}
+    </h3>
 
+    <p>
+        {{ product.description }}
+    </p>
 
-<p>
-    {{ product.description }}
-</p>
+    <p>
+        Price: {{ product.price }} Kč
+    </p>
 
-<p>
-    Price: {{ product.price }} Kč
-</p>
+    <div class="card-actions" style="margin-top: 15px; display: flex; gap: 10px; align-items: center;">
+        <a class="button" href="{% url 'product_detail' product.id %}">
+            View details
+        </a>
 
-{% if product.in_stock %}
-
-<p>
-✅ In stock
-</p>
-
-{% else %}
-
-<p>
-❌ Out of stock
-</p>
-
-{% endif %}
-
-<a class="button" href="{% url 'product_detail' product.id %}">
-    View details
-</a>
+        <!-- Кнопка добавления в корзину (без shop:) -->
+        <form method="POST" action="{% url 'add_to_cart' product.id %}" style="margin: 0;">
+            {% csrf_token %}
+            <input type="hidden" name="quantity" value="1">
+            <button type="submit" class="button button-cart">
+                Add to cart 🛒
+            </button>
+        </form>
+    </div>
 
 </div>
-
 
 {% empty %}
 
 <div class="card">
 
-<h3>
-    Products coming soon 🌸
-</h3>
+    <h3>
+        Products coming soon 🌸
+    </h3>
 
-<p>
-    Our building materials catalog will be available soon.
-</p>
+    <p>
+        Our building materials catalog will be available soon.
+    </p>
 
 </div>
 
 {% endfor %}
 
-
 </div>
-
 
 {% endblock %}

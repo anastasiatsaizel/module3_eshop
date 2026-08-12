@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Edit {{ product.title }} | BuildingMarket{% endblock %}
+
+{% block content %}
+<section class="edit-product-section">
+    <h1>Edit Product: {{ product.title }}</h1>
+
+    <form method="POST" action="">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button type="submit">Save Changes</button>
+        <a href="{% url 'product_list' %}">Cancel</a>
+    </form>
+</section>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Checkout | BuildingMarket{% endblock %}
+
+{% block content %}
+<section class="checkout-container" style="max-width: 700px; margin: 0 auto; padding: 20px;">
+    <h1>Order placing 📦</h1>
+
+    <h3>Order:</h3>
+    <div class="checkout-list" style="margin-bottom: 20px;">
+        {% for item in cart_items %}
+            <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #eee;">
+                <span>{{ item.product.title }} (x{{ item.quantity }})</span>
+                <strong>{% widthratio item.product.price 1 item.quantity %} Kč</strong>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div style="background-color: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 1.2rem;">Celková cena:</span>
+        <strong style="font-size: 1.4rem; color: #2e7d32;">{{ total_price }} Kč</strong>
+    </div>
+
+    <form method="POST" action="{% url 'checkout' %}">
+        {% csrf_token %}
+        <button type="submit" class="button" style="background-color: #28a745; color: white; padding: 12px 24px; font-size: 1.1rem; border: none; border-radius: 6px; cursor: pointer;">
+            Confirm order
+        </button>
+        <a href="{% url 'cart' %}" style="margin-left: 15px; color: #666; text-decoration: none;">Back to cart</a>
+    </form>
+</section>
+{% endblock %}

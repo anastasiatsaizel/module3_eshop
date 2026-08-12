@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Order Success{% endblock %}
+
+{% block content %}
+<section style="text-align: center; padding: 40px 20px;">
+    <h1 style="color: #2e7d32;">Order №{{ order.id }} successfully placed! 🎉</h1>
+    <p style="font-size: 1.1rem;">Thank you for your order. Total price: <strong>{{ order.total_price }} Kč</strong>.</p>
+    <a href="{% url 'product_list' %}" class="button" style="display: inline-block; margin-top: 20px; padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px;">
+        Back to catalogue 🧱
+    </a>
+</section>
+{% endblock %}

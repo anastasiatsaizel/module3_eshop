@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Cart | BuildingMarket{% endblock %}
+
+{% block content %}
+<section class="cart-container" style="max-width: 800px; margin: 0 auto; padding: 20px;">
+    <h1 style="margin-bottom: 25px;">Shopping Cart 🛒</h1>
+
+    {% if cart_items %}
+        <div class="cart-list" style="display: flex; flex-direction: column; gap: 15px;">
+            {% for item in cart_items %}
+                <div class="cart-card" style="display: flex; justify-content: space-between; align-items: center; border: 1px solid #e0e0e0; border-radius: 10px; padding: 18px 24px; background-color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+
+                    <!-- Информация о товаре -->
+                    <div class="cart-item-info" style="flex-grow: 1;">
+                        <h3 style="margin: 0 0 8px 0; font-size: 1.2rem; color: #333;">
+                            {{ item.product.title }}
+                        </h3>
+                        <p style="margin: 0; color: #666; font-size: 0.95rem;">
+                            Cena za ks: <strong>{{ item.product.price }} Kč</strong> | Množství: <strong>{{ item.quantity }}</strong>
+                        </p>
+                    </div>
+
+                    <!-- Стоимость позиции и кнопка удаления -->
+                    <div class="cart-item-actions" style="display: flex; align-items: center; gap: 20px;">
+                        <span class="item-total" style="font-weight: 600; font-size: 1.1rem; color: #2c3e50;">
+                            {% widthratio item.product.price 1 item.quantity %} Kč
+                        </span>
+
+                        <form method="POST" action="{% url 'remove_from_cart' item.pk %}" style="margin: 0;">
+                            {% csrf_token %}
+                            <button type="submit" class="button-delete" style="background-color: #ff4d4d; color: white; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: 500; transition: background 0.2s;" onmouseover="this.style.backgroundColor='#e60000'" onmouseout="this.style.backgroundColor='#ff4d4d'">
+                                Delete 🗑️
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Итоговая сумма чека и КНОПКА ЗАКАЗА -->
+        <div class="cart-summary" style="margin-top: 30px; padding: 20px; background-color: #f9f9f9; border-radius: 10px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <span style="font-size: 1.2rem; font-weight: 500; color: #333;">Celková cena: </span>
+                <span style="font-size: 1.5rem; font-weight: 700; color: #2e7d32;">{{ total_price }} Kč</span>
+            </div>
+
+            <!-- Кнопка оформления всего заказа (теперь внизу) -->
+            <a href="{% url 'checkout' %}" class="button" style="background-color: #28a745; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 1.05rem;">
+                Place an order 💳
+            </a>
+        </div>
+
+    {% else %}
+        <div class="empty-cart" style="text-align: center; padding: 40px 20px; border: 1px dashed #ccc; border-radius: 10px; background-color: #fafafa;">
+            <p style="font-size: 1.2rem; color: #666; margin-bottom: 20px;">Vaše košík je prázdný 🌸</p>
+            <a href="{% url 'product_list' %}" class="button" style="text-decoration: none; padding: 10px 20px; background-color: #007bff; color: white; border-radius: 6px; display: inline-block;">
+                Go to products catalog 🧱
+            </a>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

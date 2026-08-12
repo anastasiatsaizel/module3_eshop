@@ -1,39 +1,30 @@
-{% extends "base.html" %}
-
-
-{% block title %}
-{{ product.name }}
-{% endblock %}
-
+{% extends 'base.html' %}
 
 {% block content %}
+<div class="product-detail">
+    <h1>{{ product.title }}</h1>
+    <p>Цена: ${{ product.price }}</p>
+    <p>{{ product.description }}</p>
 
-<div class="page">
+    <!-- Вывод ошибок формы -->
+    {% if form.errors %}
+        <div style="color: red; background-color: #f8d7da; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    {% endif %}
 
+    <form method="POST" action="{% url 'add_to_cart' product.pk %}">
+        {% csrf_token %}
 
-<h1>
-    {{ product.name }}
-</h1>
+        {{ form.quantity.label_tag }}
+        {{ form.quantity }}
+        {{ form.product }}
 
-
-<p>
-    {{ product.description }}
-</p>
-
-
-<p>
-    Price:
-    <strong>
-        {{ product.price }} Kč
-    </strong>
-</p>
-
-
-<button class="button">
-    Add to cart
-</button>
-
-
+        <button type="submit">Add to cart 🛒</button>
+    </form>
 </div>
-
 {% endblock %}

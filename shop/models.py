@@ -5,7 +5,8 @@ from django.core.exceptions import ValidationError
 
 # Create your models here.
 class User(AbstractUser):
-    balance = models.DecimalField(max_digits=12, decimal_places=2, default=10000.00)
+    birth_date = models.DateField(null=True, blank=True)
+    avatar = models.ImageField(upload_to="avatars/", null=True, blank=True)
 
 
 class Category(models.Model):

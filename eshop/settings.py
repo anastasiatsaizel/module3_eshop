@@ -126,3 +126,5 @@ STATICFILES_DIRS = [
 ]
 
 AUTH_USER_MODEL = 'shop.User'
+
+LOGIN_URL = '/login/'

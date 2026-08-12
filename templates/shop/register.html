@@ -1,8 +1,8 @@
 {% extends "base.html" %}
-
+{% load static %}
 
 {% block title %}
-Registration
+Registration | BuildingMarket
 {% endblock %}
 
 
@@ -14,23 +14,28 @@ Registration
     Create an account 🌸
 </h1>
 
+    <!-- Вывод общих ошибок формы -->
+    {% if form.errors %}
+        <div style="color: red; background: #f8d7da; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+            <p><strong>Please change the following problems:</strong></p>
+            <ul>
+                {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                        <li>{{ field|capfirst }}: {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
 
-<form>
+    <form method="POST" action="">
+  {% csrf_token %}
 
-<input type="text" placeholder="Name">
+{{ form.as_p }}
 
-<input type="email" placeholder="Email">
+        <button type="submit">Register</button>
+    </form>
 
-<input type="password" placeholder="Password">
-
-
-<button class="button">
-    Register
-</button>
-
-
-</form>
-
-</div>
-
+    <p>Already have an account? <a href="{% url 'login' %}">Enter</a></p>
+</section>
 {% endblock %}

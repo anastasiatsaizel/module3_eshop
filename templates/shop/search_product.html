@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Search Products | BuildingMarket{% endblock %}
+
+{% block content %}
+<section class="search-section">
+    <h1>Product Search</h1>
+
+    <!-- Form for testing GET/POST. Change method="GET" or method="POST" to test behavior -->
+    <form method="GET" action="" class="search-form">
+        {% csrf_token %}
+        <input type="text" name="search" placeholder="Enter product name..." required>
+        <button type="submit">Search</button>
+    </form>
+
+    <hr>
+
+    <!-- Results display block -->
+    <div class="search-results">
+        {% if message %}
+            <h2>{{ message }}</h2>
+        {% else %}
+            <h2>Product List</h2>
+            <ul>
+                {% for product in products %}
+                    <li>{{ product.title }}</li>
+                {% empty %}
+                    <li>No products found</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
