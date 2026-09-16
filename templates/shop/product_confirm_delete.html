@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete {{ object.title }} | BuildingMarket{% endblock %}
+
+{% block content %}
+<section class="delete-product-section">
+    <h1>Delete Product</h1>
+    <p>Are you sure you want to delete product "<strong>{{ object.title }}</strong>"?</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" class="button" style="background-color: #dc3545;">Yes, delete</button>
+        <a href="{% url 'product_list' %}" class="button" style="background-color: #6c757d;">Cancel</a>
+    </form>
+</section>
+{% endblock %}

@@ -3,30 +3,47 @@
 {% block title %}Checkout | BuildingMarket{% endblock %}
 
 {% block content %}
-<section class="checkout-container" style="max-width: 700px; margin: 0 auto; padding: 20px;">
-    <h1>Order placing 📦</h1>
+<section class="checkout-container" style="max-width: 600px; margin: 30px auto; padding: 25px; background: #fff; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+    <h1>Confirm Order 💳</h1>
 
-    <h3>Order:</h3>
-    <div class="checkout-list" style="margin-bottom: 20px;">
-        {% for item in cart_items %}
-            <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #eee;">
-                <span>{{ item.product.title }} (x{{ item.quantity }})</span>
-                <strong>{% widthratio item.product.price 1 item.quantity %} Kč</strong>
-            </div>
-        {% endfor %}
+    <div style="margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+        <p style="margin: 5px 0;">Your current balance: <strong>{{ user_balance }} Kč</strong></p>
+        <p style="margin: 5px 0;">Total to be paid: <strong>{{ total_price }} Kč</strong></p>
     </div>
 
-    <div style="background-color: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center;">
-        <span style="font-size: 1.2rem;">Celková cena:</span>
-        <strong style="font-size: 1.4rem; color: #2e7d32;">{{ total_price }} Kč</strong>
+    <!-- Предупреждение, если денег не хватает -->
+    {% if user_balance < total_price %}
+        <div style="background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
+             <strong>Insufficient funds!</strong>
+        </div>
+    {% endif %}
+
+    <div class="checkout-items" style="margin-bottom: 25px;">
+        <h3>Products in your order:</h3>
+        <ul style="padding-left: 20px; color: #555;">
+            {% for item in cart_items %}
+                <li>{{ item.product.title }} — {{ item.quantity }} pc. × {{ item.product.price }} Kč</li>
+            {% endfor %}
+        </ul>
     </div>
 
-    <form method="POST" action="{% url 'checkout' %}">
+    <form method="POST">
         {% csrf_token %}
-        <button type="submit" class="button" style="background-color: #28a745; color: white; padding: 12px 24px; font-size: 1.1rem; border: none; border-radius: 6px; cursor: pointer;">
-            Confirm order
-        </button>
-        <a href="{% url 'cart' %}" style="margin-left: 15px; color: #666; text-decoration: none;">Back to cart</a>
+        <div style="display: flex; gap: 10px;">
+            {% if user_balance >= total_price %}
+                <button type="submit" class="button" style="background-color: #28a745; color: white; padding: 12px 20px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">
+                    Confirm & Pay
+                </button>
+            {% else %}
+                <button type="button" class="button" disabled style="background-color: #6c757d; color: white; padding: 12px 20px; border: none; border-radius: 6px; opacity: 0.65; cursor: not-allowed;">
+                    Not enough balance
+                </button>
+            {% endif %}
+
+            <a href="{% url 'cart' %}" class="button" style="background-color: #dc3545; color: white; text-decoration: none; padding: 12px 20px; border-radius: 6px;">
+                Back to Cart
+            </a>
+        </div>
     </form>
 </section>
 {% endblock %}

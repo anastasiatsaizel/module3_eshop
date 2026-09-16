@@ -1,30 +1,56 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
 <div class="product-detail">
     <h1>{{ product.title }}</h1>
-    <p>Цена: ${{ product.price }}</p>
+    <p>Price: {{ product.price }} Kč</p>
     <p>{{ product.description }}</p>
 
-    <!-- Вывод ошибок формы -->
-    {% if form.errors %}
+    <!-- Вывод ошибок (например, если превысили лимит в 10 штук) -->
+    {% if error_message %}
         <div style="color: red; background-color: #f8d7da; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
-            {% for field in form %}
-                {% for error in field.errors %}
-                    <p>{{ error }}</p>
-                {% endfor %}
-            {% endfor %}
+            <p>{{ error_message }}</p>
         </div>
     {% endif %}
 
-    <form method="POST" action="{% url 'add_to_cart' product.pk %}">
-        {% csrf_token %}
+    {% load static %}
 
-        {{ form.quantity.label_tag }}
-        {{ form.quantity }}
-        {{ form.product }}
+<!-- Контейнер для фото товара -->
+<div class="product-detail-image-container" style="max-width: 500px; width: 100%; height: 400px; display: flex; justify-content: center; align-items: center; background-color: #f8f9fa; border-radius: 8px; border: 1px solid #e0ede2; overflow: hidden; margin: 0 auto;">
 
-        <button type="submit">Add to cart 🛒</button>
-    </form>
+    {% if product.image %}
+        <img src="{{ product.image.url }}"
+             alt="{{ product.title }}"
+             style="max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; display: block;">
+    {% else %}
+        <img src="{% static 'shop/img/no-image.png' %}"
+             alt="No image available"
+             style="max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; opacity: 0.5;">
+    {% endif %}
+
+</div>
+
+    <!-- Проверка авторизации -->
+    {% if user.is_authenticated %}
+        <form method="POST" action="{% url 'add_to_cart' product.pk %}">
+            {% csrf_token %}
+
+            <div style="margin-bottom: 15px;">
+                {{ form.quantity.label_tag }}
+                {{ form.quantity }}
+            </div>
+
+            <button type="submit" class="button button-cart">Add to cart </button>
+        </form>
+    {% else %}
+        <p style="margin-top: 20px; font-weight: bold;">
+            To add items to the cart, please <a href="{% url 'login' %}">login</a> or <a href="{% url 'register' %}">register</a>.
+        </p>
+    {% endif %}
+
+    <div style="margin-top: 20px;">
+        <a class="button" href="{% url 'product_list' %}" style="background-color: #6c757d;">Back to catalog</a>
+    </div>
 </div>
 {% endblock %}

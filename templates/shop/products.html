@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}
 Products
@@ -7,11 +8,20 @@ Products
 {% block content %}
 
 <h1>
-    Building materials catalog 🧱
+    Building materials catalog 
 </h1>
 
+<!-- Форма поиска -->
+<form method="GET" action="{% url 'product_list' %}" style="margin-bottom: 20px; display: flex; gap: 10px;">
+    <input type="text" name="search" value="{{ search_query }}" placeholder="Search products (e.g. Cement)..." style="padding: 8px; width: 300px;">
+    <button type="submit" class="button">Search</button>
+    {% if search_query %}
+        <a href="{% url 'product_list' %}" class="button" style="background-color: #6c757d;">Clear</a>
+    {% endif %}
+</form>
+
 <p>
-    Total products: {{ products|length }}
+    Showing {{ page_obj.object_list|length }} products on this page
 </p>
 
 <div class="products">
@@ -20,31 +30,45 @@ Products
 
 <div class="card">
 
-    <h3>
-       {{ forloop.counter }}. {{ product.title|upper }}
+    <!-- Изображение товара -->
+    {% if product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.title }}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 6px;">
+    {% else %}
+        <!-- Картинка по умолчанию -->
+        <img src="{% static 'shop/img/no-image.png' %}" alt="No image available" style="width: 100%; height: 200px; object-fit: cover; border-radius: 6px;">
+    {% endif %}
+
+    <h3 style="margin-top: 12px; margin-bottom: 6px;">
+       {{ product.name|default:product.title }}
     </h3>
 
-    <p>
+    <p style="font-weight: bold; color: #2e7d32; font-size: 1.1rem; margin-bottom: 8px;">
+        {{ product.price }} Kč
+    </p>
+
+    <p style="color: #555; font-size: 0.95rem;">
         {{ product.description }}
     </p>
 
-    <p>
-        Price: {{ product.price }} Kč
-    </p>
-
-    <div class="card-actions" style="margin-top: 15px; display: flex; gap: 10px; align-items: center;">
+    <div class="card-actions" style="margin-top: 15px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
         <a class="button" href="{% url 'product_detail' product.id %}">
             View details
         </a>
 
-        <!-- Кнопка добавления в корзину (без shop:) -->
-        <form method="POST" action="{% url 'add_to_cart' product.id %}" style="margin: 0;">
+        <!-- AJAX-форма добавления в корзину -->
+        <form method="POST" action="{% url 'add_to_cart' product.id %}" class="ajax-add-to-cart" style="margin: 0;">
             {% csrf_token %}
             <input type="hidden" name="quantity" value="1">
             <button type="submit" class="button button-cart">
-                Add to cart 🛒
+                Add to cart
             </button>
         </form>
+
+        <!-- Кнопки управления только для админа -->
+        {% if user.is_staff or user.is_superuser %}
+            <a class="button" href="{% url 'edit_product' product.id %}" style="background-color: #ffc107; color: #000;">Edit ✏</a>
+            <a class="button" href="{% url 'delete_product' product.id %}" style="background-color: #dc3545;">Delete 🗑️</a>
+        {% endif %}
     </div>
 
 </div>
@@ -52,19 +76,73 @@ Products
 {% empty %}
 
 <div class="card">
-
     <h3>
-        Products coming soon 🌸
+        Products coming soon...
     </h3>
-
     <p>
-        Our building materials catalog will be available soon.
+        No products found matching your criteria.
     </p>
-
 </div>
 
 {% endfor %}
 
 </div>
+
+<!-- Пагинация -->
+{% if is_paginated %}
+<div class="pagination" style="margin-top: 30px; display: flex; gap: 10px; align-items: center; justify-content: center;">
+    {% if page_obj.has_previous %}
+        <a class="button" href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}">&laquo; First</a>
+        <a class="button" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}">Previous</a>
+    {% endif %}
+
+    <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+    {% if page_obj.has_next %}
+        <a class="button" href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}">Next</a>
+        <a class="button" href="?page={{ page_obj.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}">Last &raquo;</a>
+    {% endif %}
+</div>
+{% endif %}
+
+<!-- JavaScript для добавления без перезагрузки -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const cartForms = document.querySelectorAll('.ajax-add-to-cart');
+
+    cartForms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault(); // Запрещаем стандартную отправку и перезагрузку страницы
+
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+
+            fetch(this.action, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': this.querySelector('[name=csrfmiddlewaretoken]').value,
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: new FormData(this)
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Временная индикация на кнопке
+                    submitBtn.textContent = 'Added! ✓';
+                    submitBtn.style.backgroundColor = '#2e7d32';
+                    submitBtn.style.color = '#ffffff';
+
+                    setTimeout(() => {
+                        submitBtn.textContent = originalText;
+                        submitBtn.style.backgroundColor = '';
+                        submitBtn.style.color = '';
+                    }, 1200);
+                }
+            })
+            .catch(error => console.error('Error adding to cart:', error));
+        });
+    });
+});
+</script>
 
 {% endblock %}

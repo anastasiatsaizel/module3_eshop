@@ -1,68 +1,53 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
-{% block title %}My Orders | BuildingMarket{% endblock %}
+{% block title %}My Orders{% endblock %}
 
 {% block content %}
-<section class="orders-container" style="max-width: 850px; margin: 0 auto; padding: 20px;">
-    <h1 style="margin-bottom: 25px;">My Orders 📦</h1>
+<div class="orders-container" style="max-width: 800px; margin: 0 auto; padding: 20px; text-align: center;">
+    <h1 style="color: #4a5d4e; margin-bottom: 30px;">My Orders</h1>
 
     {% if orders %}
-        <div class="orders-list" style="display: flex; flex-direction: column; gap: 20px;">
-            {% for order in orders %}
-                <div class="order-card" style="border: 1px solid #e0e0e0; border-radius: 10px; padding: 20px; background-color: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">
+        {% for order in orders %}
+            <div class="order-card" style="background: #ffffff; border: 1px solid #e0e0e0; border-radius: 12px; padding: 25px; margin-bottom: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); text-align: center;">
 
-                    <!-- Шапка заказа: номер и дата -->
-                    <div class="order-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 12px; margin-bottom: 15px;">
-                        <div>
-                            <h3 style="margin: 0; font-size: 1.2rem; color: #2c3e50;">
-                                Order #{{ order.id }}
-                            </h3>
-                            <span style="font-size: 0.88rem; color: #777;">
-                                {{ order.created_at|date:"d.m.Y H:i" }}
+                <!-- Шапка заказа -->
+                <div style="border-bottom: 2px solid #f0f0f0; padding-bottom: 12px; margin-bottom: 20px;">
+                    <h2 style="margin: 0; font-size: 1.3rem; color: #333;">
+                        Order #{{ order.id }}
+                        <span style="font-size: 0.9rem; color: #777; font-weight: normal;">({{ order.created_at|date:"d.m.Y H:i" }})</span>
+                    </h2>
+                </div>
+
+                <h3 style="font-size: 1rem; color: #666; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px;">Items in order</h3>
+
+                <!-- Элементы заказа без маркеров (точек) -->
+                <div class="order-items-list" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+                    {% for item in order.items.all %}
+                        <div style="background: #f9fbf9; border: 1px solid #e8eee8; border-radius: 8px; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; text-align: left;">
+                            <span style="font-weight: 600; color: #2c3e50; max-width: 60%;">
+                                {{ item.product.title }}
+                            </span>
+                            <span style="color: #666; font-size: 0.95rem;">
+                                {{ item.quantity }} pcs. × {{ item.price }} CZK
                             </span>
                         </div>
-                    </div>
-
-                    <!-- Список товаров в заказе -->
-                    <div class="order-items" style="margin-bottom: 15px;">
-                        <ul style="list-style: none; padding: 0; margin: 0;">
-                            {% for item in order.orderitem_set.all %}
-                                <style>
-                                    /* Маленький костыль для адаптации под разный related_name */
-                                </style>
-                                <li style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #f0f0f0;">
-                                    <span style="color: #333;">
-                                        <strong>{{ item.product.title }}</strong> (x{{ item.quantity }})
-                                    </span>
-                                    <span style="color: #555;">
-                                        {{ item.price }} Kč / ks
-                                    </span>
-                                </li>
-                            {% empty %}
-                                {% for item in order.items.all %}
-                                    <li style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #f0f0f0;">
-                                        <span style="color: #333;">
-                                            <strong>{{ item.product.title }}</strong> (x{{ item.quantity }})
-                                        </span>
-                                        <span style="color: #555;">
-                                            {{ item.price }} Kč / ks
-                                        </span>
-                                    </li>
-                                {% endfor %}
-                            {% endfor %}
-                        </ul>
-                    </div>
-
+                    {% empty %}
+                        <p style="color: #999;">No items in this order.</p>
+                    {% endfor %}
                 </div>
-            {% endfor %}
-        </div>
+
+                <!-- Итоговая сумма -->
+                <div style="border-top: 1px solid #f0f0f0; padding-top: 15px; margin-top: 15px; display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 1.2rem;">
+                    <span style="color: #444; font-weight: 500;">Total cost:</span>
+                    <span style="color: #2e7d32; font-weight: 700; font-size: 1.3rem;">
+                        {{ order.get_total_cost }} CZK
+                    </span>
+                </div>
+
+            </div>
+        {% endfor %}
     {% else %}
-        <div class="empty-orders" style="text-align: center; padding: 40px 20px; border: 1px dashed #ccc; border-radius: 10px; background-color: #fafafa;">
-            <p style="font-size: 1.2rem; color: #666; margin-bottom: 20px;">No Orders yet 🌸</p>
-            <a href="{% url 'product_list' %}" class="button" style="text-decoration: none; padding: 10px 20px; background-color: #007bff; color: white; border-radius: 6px; display: inline-block;">
-                Back to catalogue 🧱
-            </a>
-        </div>
+        <p style="color: #777; font-size: 1.1rem;">You have no orders yet.</p>
     {% endif %}
-</section>
+</div>
 {% endblock %}

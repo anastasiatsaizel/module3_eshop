@@ -7,7 +7,7 @@ from django.core.exceptions import ValidationError
 class User(AbstractUser):
     birth_date = models.DateField(null=True, blank=True)
     avatar = models.ImageField(upload_to="avatars/", null=True, blank=True)
-
+    balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -25,7 +25,7 @@ class Product(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
     price = models.DecimalField(max_digits=8, decimal_places=2)
-    image = models.ImageField(blank=True, null=True, upload_to="products")
+    image = models.ImageField(upload_to='products/', blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.PROTECT, blank=True, null=True, related_name="products")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -80,10 +80,13 @@ class Order(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    total = models.DecimalField(max_digits=12, decimal_places=2)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
 
     def __str__(self):
         return f"Order #{self.id} by {self.user.username}"
+
+    def get_total_cost(self):
+        return sum(item.price * item.quantity for item in self.items.all())
 
 
 class OrderItem(models.Model):
@@ -93,7 +96,7 @@ class OrderItem(models.Model):
     product = models.ForeignKey(
         Product,
         on_delete=models.PROTECT,
-        related_name="order_items",
+        related_name="items",
         verbose_name='Product'
     )
     quantity = models.PositiveIntegerField(default=1, verbose_name='Quantity')
@@ -133,6 +136,7 @@ class Purchase(models.Model):
 
     def __str__(self):
         return f"Purchase #{self.id} — {self.total_price} Kč."
+
 
 # [ User ] ──(1:1)──> [ Cart ] ──(1:N)──> [ CartItem ] <──(N:1)── [ Product ]
 #    │                                                                 ▲

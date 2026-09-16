@@ -1,6 +1,10 @@
 from django.contrib import admin
 from .models import Category, Product, Cart, CartItem, Order, OrderItem, Purchase
+from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth import get_user_model
+from .models import User
 
+User = get_user_model()
 
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ['id', 'name']
@@ -41,6 +45,15 @@ class OrderAdmin(admin.ModelAdmin):
     def get_total_price(self, obj):
         # Вычисляем сумму через связанные элементы заказа
         return sum(item.price * item.quantity for item in obj.orderitem_set.all())
+
+
+@admin.register(User)
+class CustomUserAdmin(UserAdmin):
+    list_display = ("username", "email", "balance", "is_staff")
+
+    fieldsets = UserAdmin.fieldsets + (
+        ("Finances", {"fields": ("balance",)}),
+    )
 
 
 # Регистрируем модели
