@@ -1,31 +1,38 @@
 {% extends "base.html" %}
 
-
 {% block title %}
 Contact us
 {% endblock %}
-
 
 {% block content %}
 
 <div class="page">
 
-<h1>Get in touch with us 🌸</h1>
+<h1>Get in touch with us</h1>
 
 <p>📍 Prague</p>
 <p>📞 +420 XXX XXX XXX</p>
-<p>✉ info@buildmarket.com</p>
+<p>info@buildmarket.com</p>
 
+<!-- Отображение сообщений (успех/ошибка) -->
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}" style="padding: 10px; margin-bottom: 15px; background: #e2e2e2;">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
 
-<form>
+<form method="POST" action="{% url 'contact' %}">
+    {% csrf_token %}
 
-    <input type="text" placeholder="Your name">
+    <input type="text" name="name" placeholder="Your name" required>
 
-    <input type="email" placeholder="Your email">
+    <input type="email" name="email" placeholder="Your email" required>
 
-    <textarea placeholder="Your message"></textarea>
+    <textarea name="message" placeholder="Your message" required></textarea>
 
-    <button class="button">
+    <button type="submit" class="button">
         Send message
     </button>
 

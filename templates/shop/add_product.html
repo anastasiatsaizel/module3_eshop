@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Add Product (ModelForm) | BuildingMarket{% endblock %}
+
+{% block content %}
+<section class="add-product-section">
+    <h1>Create Product</h1>
+
+    <form method="POST" actions="">
+    {% csrf_token %}
+
+    <!-- Отображение всех ошибок над формой -->
+    {% if form.errors %}
+        <ul style="color: red;">
+            {% for field, errors in form.errors.items %}
+               <li><strong>{{ field }}:</strong> {{ errors|striptags }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {{ form.as_p }}
+
+    <button type="submit">Save</button>
+</form>
+
+</section>
+{% endblock %}

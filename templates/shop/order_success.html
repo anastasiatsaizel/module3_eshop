@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Order Confirmed | BuildMarket{% endblock %}
+
+{% block content %}
+<section class="success-container" style="max-width: 650px; margin: 40px auto; padding: 30px; background: #ffffff; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center;">
+
+    <!-- Иконка успеха -->
+    <div class="success-icon" style="width: 70px; height: 70px; background-color: #d4edda; color: #28a745; font-size: 2.2rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto;">
+        ✓
+    </div>
+
+    <h1 style="color: #2c3e50; margin-bottom: 10px; font-size: 1.8rem;">Thank you for your order! </h1>
+    <p style="color: #666; font-size: 1.05rem; margin-bottom: 25px;">
+        Your order <strong>#{{ order.id }}</strong> has been successfully placed and is being processed.
+    </p>
+
+    <!-- Сводка о заказе -->
+    <div class="order-details" style="background-color: #f9f9f9; padding: 20px; border-radius: 8px; text-align: left; margin-bottom: 30px;">
+        <h3 style="margin-top: 0; border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; color: #333;">Order Summary</h3>
+
+        <ul style="list-style: none; padding: 0; margin: 15px 0;">
+            {% for item in order.orderitem_set.all %}
+                <li style="display: flex; justify-content: space-between; margin-bottom: 8px; color: #555;">
+                    <span>{{ item.product.title }} (x{{ item.quantity }})</span>
+                    <strong>{% widthratio item.price 1 item.quantity %} Kč</strong>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <div style="border-top: 1px dashed #ccc; pt: 10px; padding-top: 10px; display: flex; justify-content: space-between; font-weight: bold; font-size: 1.1rem; color: #2e7d32;">
+            <span>Total Paid:</span>
+            <span>{{ order.total_price }} Kč</span>
+        </div>
+    </div>
+
+    <!-- Кнопки действий -->
+    <div class="actions" style="display: flex; gap: 15px; justify-content: center;">
+        <a href="{% url 'my_orders' %}" class="button" style="background-color: #2c3e50; color: white; padding: 12px 20px; text-decoration: none; border-radius: 6px; font-weight: 500;">
+            View My Orders 📦
+        </a>
+        <a href="{% url 'product_list' %}" class="button" style="background-color: #007bff; color: white; padding: 12px 20px; text-decoration: none; border-radius: 6px; font-weight: 500;">
+            Continue Shopping 🧱
+        </a>
+    </div>
+
+</section>
+{% endblock %}

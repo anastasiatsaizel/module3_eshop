@@ -75,8 +75,12 @@ WSGI_APPLICATION = 'eshop.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'module3_db',           # Имя вашей базы данных
+        'USER': 'admin',         # Имя пользователя
+        'PASSWORD': 'module3', # Пароль пользователя
+        'HOST': 'localhost',      # Хост (обычно localhost)
+        'PORT': '5432',           # Порт PostgreSQL (по умолчанию 5432)
     }
 }
 
@@ -120,3 +124,12 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+AUTH_USER_MODEL = 'shop.User'
+
+LOGIN_URL = '/login/'
+
+

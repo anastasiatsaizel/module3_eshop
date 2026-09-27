@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}My Orders{% endblock %}
+
+{% block content %}
+<div class="orders-container" style="max-width: 800px; margin: 0 auto; padding: 20px; text-align: center;">
+    <h1 style="color: #4a5d4e; margin-bottom: 30px;">My Orders</h1>
+
+    {% if orders %}
+        {% for order in orders %}
+            <div class="order-card" style="background: #ffffff; border: 1px solid #e0e0e0; border-radius: 12px; padding: 25px; margin-bottom: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); text-align: center;">
+
+                <!-- Шапка заказа -->
+                <div style="border-bottom: 2px solid #f0f0f0; padding-bottom: 12px; margin-bottom: 20px;">
+                    <h2 style="margin: 0; font-size: 1.3rem; color: #333;">
+                        Order #{{ order.id }}
+                        <span style="font-size: 0.9rem; color: #777; font-weight: normal;">({{ order.created_at|date:"d.m.Y H:i" }})</span>
+                    </h2>
+                </div>
+
+                <h3 style="font-size: 1rem; color: #666; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px;">Items in order</h3>
+
+                <!-- Элементы заказа без маркеров (точек) -->
+                <div class="order-items-list" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+                    {% for item in order.items.all %}
+                        <div style="background: #f9fbf9; border: 1px solid #e8eee8; border-radius: 8px; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; text-align: left;">
+                            <span style="font-weight: 600; color: #2c3e50; max-width: 60%;">
+                                {{ item.product.title }}
+                            </span>
+                            <span style="color: #666; font-size: 0.95rem;">
+                                {{ item.quantity }} pcs. × {{ item.price }} CZK
+                            </span>
+                        </div>
+                    {% empty %}
+                        <p style="color: #999;">No items in this order.</p>
+                    {% endfor %}
+                </div>
+
+                <!-- Итоговая сумма -->
+                <div style="border-top: 1px solid #f0f0f0; padding-top: 15px; margin-top: 15px; display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 1.2rem;">
+                    <span style="color: #444; font-weight: 500;">Total cost:</span>
+                    <span style="color: #2e7d32; font-weight: 700; font-size: 1.3rem;">
+                        {{ order.get_total_cost }} CZK
+                    </span>
+                </div>
+
+            </div>
+        {% endfor %}
+    {% else %}
+        <p style="color: #777; font-size: 1.1rem;">You have no orders yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

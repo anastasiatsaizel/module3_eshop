@@ -15,18 +15,19 @@ Login
 </h1>
 
 
-<form>
+<form method="post">
+  {% csrf_token %}
+  {{ form.non_field_errors }}
 
-<input type="text" placeholder="Username">
+  {% for field in form %}
+    <div>
+      {{ field.label_tag }}
+      {{ field }}
+      {{ field.errors }}
+    </div>
+  {% endfor %}
 
-<input type="password" placeholder="Password">
-
-
-<button class="button">
-    Sign in
-</button>
-
-
+  <button type="submit">Enter</button>
 </form>
 
 </div>

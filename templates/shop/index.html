@@ -19,9 +19,15 @@ Home | BuildMarket
         construction, and creating a comfortable space.
     </p>
 
-    <a class="button" href="/products/">
-        Browse products
-    </a>
+<div class="hero-actions">
+        <a class="button" href="{% url 'product_list' %}">
+            Browse products
+        </a>
+
+        {% if user.is_authenticated %}
+            <a href="{% url 'cart' %}" class="button">Go to Cart 🛒</a>
+        {% endif %}
+    </div>
 
 </section>
 
@@ -43,6 +49,5 @@ Home | BuildMarket
         <p>Everything you need for construction and renovation.</p>
     </div>
 
-</section>
 
 {% endblock %}
